@@ -1,8 +1,10 @@
+# _base_未使用
 _base_ = [
     '../../_base_/models/mask_rcnn_r50_fpn.py',
     '../../_base_/datasets/nuim_instance.py',
     '../../_base_/schedules/mmdet_schedule_1x.py', '../_base_/default_runtime.py'
 ]
+
 optimizer = dict(_delete_=True, type='AdamW', lr=0.0001, betas=(0.9, 0.999), weight_decay=0.05,
                  paramwise_cfg=dict(custom_keys={'absolute_pos_embed': dict(decay_mult=0.),
                                                  'relative_position_bias_table': dict(decay_mult=0.),
@@ -11,8 +13,10 @@ lr_config = dict(step=[27, 33])
 runner = dict(type='EpochBasedRunner', max_epochs=36)
 total_epochs = 36
 
+# NOTE 使用了SwinTransformer的Parameter
 pretrained = 'https://github.com/SwinTransformer/storage/releases/download/v1.0.0/swin_tiny_patch4_window7_224.pth'
 
+# NOTE backbone使用的是在SwinTransformer基础上的CSwinTransformer（CVPR 2022）
 model = dict(
     pretrained = pretrained,  
     backbone=dict(
@@ -43,4 +47,5 @@ data = dict(
     workers_per_gpu=2,)
 # fp16 = dict(loss_scale=32.0)
 
+# load_from未使用
 load_from = 'work_dirs/mask_rcnn_cbv2_swin_tiny_patch4_window7_mstrain_480-800_adamw_3x_coco/mask_rcnn_cbv2_swin_tiny_patch4_window7_mstrain_480-800_adamw_3x_coco.pth'

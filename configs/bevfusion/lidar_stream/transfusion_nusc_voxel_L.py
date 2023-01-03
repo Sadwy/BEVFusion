@@ -1,3 +1,4 @@
+# _base_没有使用
 _base_ = [
     '../../_base_/datasets/nus_tf.py',
 ]
@@ -11,6 +12,12 @@ voxel_size = [0.075, 0.075, 0.2]
 out_size_factor = 8
 evaluation = dict(interval=12)
 
+"""model
+此处的模型配置比transfusion_nusc_voxel_L.py多了几项：
+pts_voxel_layer, pts_voxel_encoder,
+pts_middle_encoder, pts_backbone,
+train_cfg, test_cfg
+"""
 model = dict(
     type='TransFusionDetector',
     pts_voxel_layer=dict(
@@ -105,8 +112,16 @@ model = dict(
             voxel_size=voxel_size[:2],
             nms_type=None,
         )))
+
+"""optimizer 优化器
+优化器似乎比camera流更简单
+"""
 optimizer = dict(type='AdamW', lr=0.0001, weight_decay=0.01)  # for 8gpu * 2sample_per_gpu
 optimizer_config = dict(grad_clip=dict(max_norm=0.1, norm_type=2))
+
+# 以下部分和camera流相同
+# 区别1：在于samples_per_gpu由4降低到2
+# 区别2：没有custom_hook
 lr_config = dict(
     policy='cyclic',
     target_ratio=(10, 0.0001),

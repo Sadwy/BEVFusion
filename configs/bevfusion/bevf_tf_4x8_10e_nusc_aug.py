@@ -1,3 +1,4 @@
+# _base_没有使用
 _base_ = [
     '../_base_/datasets/nusc_tf_aug.py',
     # '../_base_/schedules/schedule_1x.py',
@@ -174,6 +175,10 @@ optimizer = dict(
             relative_position_bias_table=dict(decay_mult=0.0),
             norm=dict(decay_mult=0.0))))
 optimizer_config = dict(grad_clip=dict(max_norm=0.1, norm_type=2))
+
+# 以下配置与单模态时相同
+# 区别1：和camera流一样samples_per_gpu为4，而lidar流是2
+# 区别2：和main branch-camera流一样有custom_hook，而lidar流没有
 lr_config = dict(
     policy='cyclic',
     target_ratio=(10, 0.0001),
@@ -211,7 +216,7 @@ data = dict(
 checkpoint_config = dict(interval=1, out_dir='/model')
 work_dir = '/model'
 
-
+# 在dev_aug分支中，没有此处custom_hooks的赋值
 custom_hooks = [
     dict(type='MindFreeHook')
 ]
