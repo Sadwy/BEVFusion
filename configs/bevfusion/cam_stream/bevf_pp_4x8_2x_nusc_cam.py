@@ -1,3 +1,4 @@
+# _base_未使用
 _base_ = [
     '../../_base_/datasets/nusc_cam_pp.py',
     '../../_base_/schedules/schedule_2x.py',
@@ -10,7 +11,7 @@ optimizer = dict(_delete_=True, type='AdamW', lr=0.001, betas=(0.9, 0.999), weig
 
 final_dim=(900, 1600) # HxW
 downsample=8
-voxel_size = [0.25, 0.25, 8]
+voxel_size = [0.25, 0.25, 8]  # 此处定义了voxel_size但是没有使用
 model = dict(
     type='BEVF_FasterRCNN',
     camera_stream=True, 
@@ -44,6 +45,14 @@ model = dict(
         use_adp=True,
         num_outs=5),
     pts_bbox_head=dict(
+        # NOTE 定义了一个3D锚点头部
+        # 256个输入通道、256个特征通道
+        # 有10个class，有对物体方向进行分类
+        # 基准框生成器是AlignedAnchor3DRangeGenerator，预设了尺寸和范围
+        # 基准框编码器是DeltaXYZWLHRBBoxCoder
+        # 损失函数cls分类：使用FocalLoss，使用了sigmoid。FocalLoss是常用的分类损失函数
+        # 损失函数bbox：SmoothL1Loss
+        # 损失函数direction：交叉熵，不使用sigmoid
         type='Anchor3DHead',
         num_classes=10,
         in_channels=256,

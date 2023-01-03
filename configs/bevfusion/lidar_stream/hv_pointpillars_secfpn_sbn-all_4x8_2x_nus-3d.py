@@ -1,3 +1,4 @@
+# _base_未使用
 _base_ = [
     '../../_base_/models/hv_pointpillars_fpn_nus.py',
     '../../_base_/datasets/nus-3d.py',
@@ -14,6 +15,11 @@ model = dict(
         upsample_strides=[1, 2, 4],
         out_channels=[128, 128, 128]),
     pts_bbox_head=dict(
+        # 与camera流（bevf_pp_4x8_2x_nusc_cam.py）有区别
+        # 输入通道、特征通道 数值不同，此处更多是384，camera流只有256
+        # 此处没有检测物体类别，而camera流在bbox阶段就检测了10个class
+        # 此处有anchor基准框生成器，但是没有基准框编码器
+        # 没有损失函数
         in_channels=384,
         feat_channels=384,
         anchor_generator=dict(

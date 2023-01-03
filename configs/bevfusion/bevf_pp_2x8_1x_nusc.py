@@ -1,9 +1,11 @@
+# _base_未使用
 _base_ = [
     '../_base_/datasets/nusc_pp.py',
     '../_base_/schedules/schedule_1x.py',
     '../_base_/default_runtime.py'
 ]
-final_dim=(900, 1600) # HxW
+# import torch.distributed.launch
+final_dim=(900, 1600) # H x W
 downsample=8
 voxel_size = [0.25, 0.25, 8]
 imc=256
